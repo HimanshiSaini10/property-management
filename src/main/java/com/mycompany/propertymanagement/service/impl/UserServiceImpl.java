@@ -8,6 +8,9 @@ import com.mycompany.propertymanagement.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
+
+import java.util.Optional;
+
 @Service
 public class UserServiceImpl implements UserService {
     @Autowired
@@ -17,8 +20,12 @@ public class UserServiceImpl implements UserService {
     private UserConverter userConverter;
     @Override
     public UserDTO login(String email, String password) {
-
-        return null;
+        UserDTO userDTO = null;
+        Optional<UserEntity> userEntity = userRepository.findByOwnerEmailAndPassword(email, password);
+        if (userEntity.isPresent()) {
+            userDTO = userConverter.convertEntityToDto(userEntity.get());
+        }
+        return userDTO;
     }
 
     @Override
